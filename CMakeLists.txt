@@ -89,6 +89,11 @@ else()
     )
 endif()
 
+# Add LVGL framebuffer and evdev driver sources
+set(LVGL_FBDEV_SRC ${PROJECT_SOURCE_DIR}/lvgl/src/drivers/display/fb/lv_linux_fbdev.c)
+set(LVGL_EVDEV_SRC ${PROJECT_SOURCE_DIR}/lvgl/src/drivers/evdev/lv_evdev.c)
+target_sources(main PRIVATE ${LVGL_FBDEV_SRC} ${LVGL_EVDEV_SRC})
+
 # Define LVGL configuration as a simple include
 target_compile_definitions(main PRIVATE LV_CONF_INCLUDE_SIMPLE)
 
