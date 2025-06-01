@@ -125,7 +125,7 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
 
   lv_group_set_default(lv_group_create());
 
-#ifdef LV_USE_SDL
+#if LV_USE_SDL
   lv_display_t * disp = lv_sdl_window_create(w, h);
 
   lv_indev_t * mouse = lv_sdl_mouse_create();
@@ -150,7 +150,7 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
   return disp;
 #endif
 
-#ifdef USE_FBDEV
+#if USE_FBDEV
   lv_display_t *disp = lv_linux_fbdev_create();
   lv_display_set_resolution(disp, w, h);
   lv_display_set_default(disp);
