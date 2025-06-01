@@ -156,7 +156,7 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
   return disp;
 #endif
 
-#if USE_FBDEV
+#if LV_USE_LINUX_FBDEV
   lv_display_t *disp = lv_linux_fbdev_create();
   if (!disp)
   {
