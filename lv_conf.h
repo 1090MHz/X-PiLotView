@@ -400,7 +400,7 @@
  * If LV_USE_LOG is enabled, an error message will be printed on failure. */
 #define LV_USE_ASSERT_NULL          1   /**< Check if the parameter is NULL. (Very fast, recommended) */
 #define LV_USE_ASSERT_MALLOC        1   /**< Checks is the memory is successfully allocated or no. (Very fast, recommended) */
-#define LV_USE_ASSERT_STYLE         1
+#define LV_USE_ASSERT_STYLE         0   /**< Style sanity checks are enabled that uses more RAM */
 #define LV_USE_ASSERT_MEM_INTEGRITY 0   /**< Memory integrity checks are enabled via LV_USE_ASSERT_MEM_INTEGRITY which makes LVGL much slower */
 #define LV_USE_ASSERT_OBJ           0   /**< Object sanity checks are enabled via LV_USE_ASSERT_OBJ which makes LVGL much slower */
 
