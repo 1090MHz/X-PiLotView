@@ -182,6 +182,7 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
     size_t buf_lines = 40;
     size_t buf_size = w * buf_lines;
 
+    static lv_draw_buf_t draw_buf1, draw_buf2;
     static lv_color_t *buf1 = NULL;
     static lv_color_t *buf2 = NULL;
 
@@ -192,7 +193,10 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
         exit(1);
     }
 
-    lv_display_set_draw_buffers(disp, buf1, buf2, buf_size, LV_DISPLAY_RENDER_MODE_PARTIAL);
+  lv_draw_buf_init(&draw_buf1, buf1, w, buf_lines, LV_COLOR_FORMAT_NATIVE);
+  lv_draw_buf_init(&draw_buf2, buf2, w, buf_lines, LV_COLOR_FORMAT_NATIVE);
+
+  lv_display_set_draw_buffers(disp, &draw_buf1, &draw_buf2);
   lv_display_set_default(disp);
 
     // Create input device
