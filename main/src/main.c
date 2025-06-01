@@ -13,8 +13,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#ifdef _MSC_VER
-  #include <Windows.h>
+  #ifdef _MSC_VER
+#include <Windows.h>
 #else
   #include <unistd.h>
   #include <pthread.h>
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
   /*Initialize the HAL (display, input devices, tick) for LVGL*/
   hal_init(320, 480);
 
-  #if LV_USE_OS == LV_OS_NONE
+#if LV_USE_OS == LV_OS_NONE
 
   /* Run the default demo */
   /* To try a different demo or example, replace this with one of: */
@@ -102,12 +102,12 @@ int main(int argc, char **argv)
 #endif
   }
 
-  #elif LV_USE_OS == LV_OS_FREERTOS
+#elif LV_USE_OS == LV_OS_FREERTOS
 
   /* Run FreeRTOS and create lvgl task */
   freertos_main();
 
-  #endif
+#endif
 
   return 0;
 }
@@ -125,6 +125,7 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
 
   lv_group_set_default(lv_group_create());
 
+#ifdef LV_USE_SDL
   lv_display_t * disp = lv_sdl_window_create(w, h);
 
   lv_indev_t * mouse = lv_sdl_mouse_create();
@@ -147,4 +148,17 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
   lv_indev_set_group(kb, lv_group_get_default());
 
   return disp;
+#endif
+
+#ifdef USE_FBDEV
+  lv_display_t *disp = lv_linux_fbdev_create();
+  lv_display_set_resolution(disp, w, h);
+  lv_display_set_default(disp);
+  lv_indev_t *indev = lv_evdev_create(LV_INDEV_TYPE_POINTER, "/dev/input/event0");
+  lv_indev_set_display(indev, disp);
+  lv_indev_set_group(indev, lv_group_get_default());
+  return disp;
+#endif
+
+  return NULL; /* Return NULL if no display is created */
 }
