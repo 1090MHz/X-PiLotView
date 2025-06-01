@@ -20,6 +20,7 @@
   #include <pthread.h>
 #endif
 #include "lvgl/lvgl.h"
+#include "lvgl/src/drivers/evdev/lv_evdev.h"
 #include "lvgl/examples/lv_examples.h"
 #include "lvgl/demos/lv_demos.h"
 
