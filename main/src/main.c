@@ -158,22 +158,42 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
 #endif
 
 #if LV_USE_LINUX_FBDEV
+    // Create display
   lv_display_t *disp = lv_linux_fbdev_create();
-  if (!disp)
-  {
-    printf("Framebuffer display creation failed!\n");
+    if (!disp) {
+        fprintf(stderr, "Framebuffer display creation failed!\n");
     exit(1);
   }
+
   lv_display_set_resolution(disp, w, h);
+
+    // Allocate draw buffers (e.g., 40 lines)
+    size_t buf_lines = 40;
+    size_t buf_size = w * buf_lines;
+
+    static lv_color_t *buf1 = NULL;
+    static lv_color_t *buf2 = NULL;
+
+    buf1 = lv_malloc(sizeof(lv_color_t) * buf_size);
+    buf2 = lv_malloc(sizeof(lv_color_t) * buf_size);
+    if (!buf1 || !buf2) {
+        fprintf(stderr, "Draw buffer allocation failed!\n");
+        exit(1);
+    }
+
+    lv_display_set_draw_buffers(disp, buf1, buf2, buf_size, LV_DISPLAY_RENDER_MODE_PARTIAL);
   lv_display_set_default(disp);
-  /* lv_indev_t *indev = lv_evdev_create(LV_INDEV_TYPE_POINTER, "/dev/input/event0"); */
+
+    // Create input device
   lv_indev_t *indev = lv_evdev_create(LV_INDEV_TYPE_POINTER, "/dev/input/by-path/platform-i2c@0-event");
   if (!indev) {
-    printf("Input device creation failed! (/dev/input/event0 missing or busy)\n");
+        fprintf(stderr, "Input device creation failed!\n");
     exit(1);
   }
+
   lv_indev_set_display(indev, disp);
   lv_indev_set_group(indev, lv_group_get_default());
+
   return disp;
 #endif
 
