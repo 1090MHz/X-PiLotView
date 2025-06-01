@@ -80,7 +80,7 @@ int main(int argc, char **argv)
   lv_init();
 
   /*Initialize the HAL (display, input devices, tick) for LVGL*/
-  hal_init(320, 480);
+  hal_init(480, 800);
 
 #if LV_USE_OS == LV_OS_NONE
 
@@ -169,7 +169,7 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
 #endif
 
 #if LV_USE_LINUX_FBDEV
-    // Create display
+    // Create framebuffer display
   lv_display_t *disp = lv_linux_fbdev_create();
     if (!disp) {
         fprintf(stderr, "Framebuffer display creation failed!\n");
@@ -193,10 +193,17 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
         exit(1);
     }
 
-  lv_draw_buf_init(&draw_buf1, buf1, w, buf_lines, LV_COLOR_FORMAT_NATIVE);
-  lv_draw_buf_init(&draw_buf2, buf2, w, buf_lines, LV_COLOR_FORMAT_NATIVE);
+    // stride is width in pixels * bytes per pixel
+    uint32_t stride = w * sizeof(lv_color_t);
 
+    // Initialize draw buffers with correct parameter order
+    lv_draw_buf_init(&draw_buf1, w, buf_lines, LV_COLOR_FORMAT_NATIVE, stride, buf1, sizeof(lv_color_t) * buf_size);
+    lv_draw_buf_init(&draw_buf2, w, buf_lines, LV_COLOR_FORMAT_NATIVE, stride, buf2, sizeof(lv_color_t) * buf_size);
+
+  // Set the display draw buffers
   lv_display_set_draw_buffers(disp, &draw_buf1, &draw_buf2);
+
+    // Set display as default
   lv_display_set_default(disp);
 
     // Create input device
