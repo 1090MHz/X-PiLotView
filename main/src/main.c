@@ -165,7 +165,12 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
   }
   lv_display_set_resolution(disp, w, h);
   lv_display_set_default(disp);
-  lv_indev_t *indev = lv_evdev_create(LV_INDEV_TYPE_POINTER, "/dev/input/event0");
+  /* lv_indev_t *indev = lv_evdev_create(LV_INDEV_TYPE_POINTER, "/dev/input/event0"); */
+  lv_indev_t *indev = lv_evdev_create(LV_INDEV_TYPE_POINTER, "/dev/input/by-path/platform-i2c@0-event");
+  if (!indev) {
+    printf("Input device creation failed! (/dev/input/event0 missing or busy)\n");
+    exit(1);
+  }
   lv_indev_set_display(indev, disp);
   lv_indev_set_group(indev, lv_group_get_default());
   return disp;
