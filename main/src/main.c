@@ -128,6 +128,12 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
 #if LV_USE_SDL
   lv_display_t * disp = lv_sdl_window_create(w, h);
 
+  if (!disp)
+  {
+    printf("SDL display creation failed!\n");
+    exit(1);
+  }
+
   lv_indev_t * mouse = lv_sdl_mouse_create();
   lv_indev_set_group(mouse, lv_group_get_default());
   lv_indev_set_display(mouse, disp);
@@ -152,6 +158,11 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
 
 #if USE_FBDEV
   lv_display_t *disp = lv_linux_fbdev_create();
+  if (!disp)
+  {
+    printf("Framebuffer display creation failed!\n");
+    exit(1);
+  }
   lv_display_set_resolution(disp, w, h);
   lv_display_set_default(disp);
   lv_indev_t *indev = lv_evdev_create(LV_INDEV_TYPE_POINTER, "/dev/input/event0");
