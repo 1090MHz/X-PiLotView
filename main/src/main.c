@@ -103,6 +103,17 @@ int main(int argc, char **argv)
 #endif
   }
 
+#elif LV_USE_OS == LV_OS_PTHREAD
+    /* Run the default demo */
+    lv_demo_widgets();
+
+    /* LVGL will call lv_timer_handler() in a background thread internally */
+
+    while(1) {
+        // You can handle your own app logic here if needed
+        sleep(1); // Idle main loop
+    }
+
 #elif LV_USE_OS == LV_OS_FREERTOS
 
   /* Run FreeRTOS and create lvgl task */
