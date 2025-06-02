@@ -177,6 +177,7 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
 
   lv_linux_fbdev_set_file(disp, "/dev/fb0");
 
+  // Set the display resolution
   lv_display_set_resolution(disp, w, h);
 
     // Allocate draw buffers (e.g., 40 lines)
