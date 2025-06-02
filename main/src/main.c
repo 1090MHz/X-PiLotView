@@ -173,7 +173,7 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
   lv_display_t *disp = lv_linux_fbdev_create();
     if (!disp) {
         fprintf(stderr, "Framebuffer display creation failed!\n");
-    exit(1);
+        return NULL;
   }
 
   lv_display_set_resolution(disp, w, h);
@@ -190,7 +190,7 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
     buf2 = lv_malloc(sizeof(lv_color_t) * buf_size);
     if (!buf1 || !buf2) {
         fprintf(stderr, "Draw buffer allocation failed!\n");
-        exit(1);
+        return NULL;
     }
 
     // stride is width in pixels * bytes per pixel
@@ -210,7 +210,7 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
   lv_indev_t *indev = lv_evdev_create(LV_INDEV_TYPE_POINTER, "/dev/input/by-path/platform-i2c@0-event");
   if (!indev) {
         fprintf(stderr, "Input device creation failed!\n");
-    exit(1);
+        return NULL;
   }
 
   lv_indev_set_display(indev, disp);
