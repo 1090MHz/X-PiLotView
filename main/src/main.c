@@ -79,6 +79,9 @@ int main(int argc, char **argv)
   lv_init();
 
   /*Initialize the HAL (display, input devices, tick) for LVGL*/
+  /* ArgonPod */
+  /* hal_init(320, 480); */
+  /* Hypepixel */
   hal_init(480, 800);
 
 #if LV_USE_OS == LV_OS_NONE
@@ -184,7 +187,6 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
     size_t buf_lines = 40;
     size_t buf_size = w * buf_lines;
 
-    static lv_draw_buf_t draw_buf1, draw_buf2;
     static lv_color_t *buf1 = NULL;
     static lv_color_t *buf2 = NULL;
 
@@ -195,12 +197,28 @@ static lv_display_t * hal_init(int32_t w, int32_t h)
         return NULL;
     }
 
-    // stride is width in pixels * bytes per pixel
-    uint32_t stride = w * sizeof(lv_color_t);
+    // Initialize draw buffers
+    static lv_draw_buf_t draw_buf1, draw_buf2;
 
-    // Initialize draw buffers with correct parameter order
-    lv_draw_buf_init(&draw_buf1, w, buf_lines, LV_COLOR_FORMAT_NATIVE, stride, buf1, sizeof(lv_color_t) * buf_size);
-    lv_draw_buf_init(&draw_buf2, w, buf_lines, LV_COLOR_FORMAT_NATIVE, stride, buf2, sizeof(lv_color_t) * buf_size);
+    // stride is width in pixels * bytes per pixel
+    uint32_t stride = w * sizeof(lv_color_t); // bytes per line
+
+    // Initialize the draw buffers with the allocated memory
+    lv_draw_buf_init(&draw_buf1,
+      w,
+      buf_lines,
+      LV_COLOR_FORMAT_NATIVE,
+      stride,
+      buf1,
+      buf_size * sizeof(lv_color_t));
+
+    lv_draw_buf_init(&draw_buf2,
+      w,
+      buf_lines,
+      LV_COLOR_FORMAT_NATIVE,
+      stride,
+      buf2,
+      buf_size * sizeof(lv_color_t));
 
   // Set the display draw buffers
   lv_display_set_draw_buffers(disp, &draw_buf1, &draw_buf2);
